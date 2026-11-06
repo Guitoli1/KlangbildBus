@@ -3,6 +3,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PluginProcessor.h"
 #include "VintageUI.h"
+#include "RackStyle.h"
 
 class BusAudioProcessorEditor : public juce::AudioProcessorEditor, private juce::Timer
 {
@@ -22,11 +23,10 @@ private:
     Knob& addKnob (const juce::String& paramID, const juce::String& name, bool big, const juce::String& steps = {});
     void setupSwitch (juce::ToggleButton& b, const juce::String& paramID, const juce::String& onText, const juce::String& offText, juce::Colour lamp);
     void timerCallback() override;
-    void renderTextures();
-    void drawEngraved (juce::Graphics&, const juce::String&, juce::Rectangle<float>, juce::Font, juce::Justification);
+    void renderPanel();
 
     BusAudioProcessor& proc;
-    VintageLookAndFeel lnf;
+    RackLookAndFeel lnf;
 
     std::vector<std::unique_ptr<Knob>> knobs;
     juce::ToggleButton onSwitch, meterSwitch;
@@ -34,9 +34,11 @@ private:
     juce::ComboBox presetBox;
     VuMeter vu { lnf, "GR" };
 
-    juce::Rectangle<int> faceplate, presetArea, vuBezel, dividerArea, tagArea;
+    static constexpr int rackW = 1280, rackH = 540;
+    juce::Rectangle<int> nameplate, vuBezel, tagArea;
+    std::array<juce::Rectangle<int>, 4> sections;
     std::array<juce::Rectangle<int>, 2> switchLabels;
-    juce::Image tolexImage, faceplateImage;
+    juce::Image panelImage;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BusAudioProcessorEditor)
 };
